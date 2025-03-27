@@ -26,7 +26,7 @@ type MiddleName struct {
 data Email = VerifiedEmail | UnverifiedEmail
 */
 type Email interface {
-	Address() string
+	isEmail()
 }
 
 type VerifiedEmail struct {
@@ -45,13 +45,9 @@ func (m UnverifiedEmail) String() string {
 	return fmt.Sprintf("Unverified:[%s]", m.Email)
 }
 
-func (m VerifiedEmail) Address() string {
-	return m.Email
-}
+func (_ VerifiedEmail) isEmail() {}
 
-func (m UnverifiedEmail) Address() string {
-	return m.Email
-}
+func (_ UnverifiedEmail) isEmail() {}
 
 type Contact struct {
 	FirstName  FirstName
@@ -172,7 +168,7 @@ func (e ContactInitFailed) Error() string {
 		O.GetOrElse(func() string {
 			return ""
 		})(O.Map(func(mn string) string {
-			return fmt.Sprintf("middlename: %s,", mn)
+			return fmt.Sprintf("middle name: %s,", mn)
 		})(e.MiddleName)),
 		e.Email,
 	)
